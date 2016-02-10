@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--  
+    <item
+        android:id="@+id/menu_insert"
+        android:orderInCategory="2"
+        android:showAsAction="collapseActionView"
+        android:title="@string/menu_insert"/>
+        
+ 
+
+    <item android:id="@+id/menu_clear" 
+        android:title="@string/menu_clear" 
+        android:orderInCategory="1"
+        android:showAsAction="ifRoom"></item>
+      -->
+ 
+    <item android:id="@+id/menu_refresh" 
+        android:title="@string/label_refresh" 
+        android:showAsAction="ifRoom" 
+        android:orderInCategory="1"></item>
+        
+      
+</menu><!-- From: file:/Users/vincent/AndroidStudioProjects/SQLITE_Bevia/app/src/main/res/menu/main.xml -->

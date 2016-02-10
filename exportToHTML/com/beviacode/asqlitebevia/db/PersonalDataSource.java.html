@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>PersonalDataSource.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { }
+.s2 { color: rgb(0,128,0); font-weight: bold; }
+.s3 { color: rgb(128,128,128); font-style: italic; }
+.s4 { color: rgb(128,128,128); font-weight: bold; font-style: italic; }
+.s5 { color: rgb(0,0,255); }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+PersonalDataSource.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+
+<a name="l1"><span class="ln">1    </span></a><span class="s0">package </span><span class="s1">com.beviacode.asqlitebevia.db; 
+<a name="l2"><span class="ln">2    </span></a> 
+<a name="l3"><span class="ln">3    </span></a></span><span class="s0">import </span><span class="s1">java.util.ArrayList; 
+<a name="l4"><span class="ln">4    </span></a></span><span class="s0">import </span><span class="s1">java.util.List; 
+<a name="l5"><span class="ln">5    </span></a> 
+<a name="l6"><span class="ln">6    </span></a></span><span class="s0">import </span><span class="s1">com.beviacode.asqlitebevia.model.Poets;
+<a name="l7"><span class="ln">7    </span></a></span><span class="s0">import </span><span class="s1">com.beviacode.asqlitebevia.utils.Utility; 
+<a name="l8"><span class="ln">8    </span></a> 
+<a name="l9"><span class="ln">9    </span></a></span><span class="s0">import </span><span class="s1">android.content.ContentValues; 
+<a name="l10"><span class="ln">10   </span></a></span><span class="s0">import </span><span class="s1">android.content.Context; 
+<a name="l11"><span class="ln">11   </span></a></span><span class="s0">import </span><span class="s1">android.database.Cursor; 
+<a name="l12"><span class="ln">12   </span></a></span><span class="s0">import </span><span class="s1">android.database.SQLException; 
+<a name="l13"><span class="ln">13   </span></a></span><span class="s0">import </span><span class="s1">android.database.sqlite.SQLiteDatabase; 
+<a name="l14"><span class="ln">14   </span></a></span><span class="s0">import </span><span class="s1">android.database.sqlite.SQLiteOpenHelper; 
+<a name="l15"><span class="ln">15   </span></a></span><span class="s0">import </span><span class="s1">android.util.Log; 
+<a name="l16"><span class="ln">16   </span></a></span><span class="s0">import </span><span class="s1">android.widget.Toast; 
+<a name="l17"><span class="ln">17   </span></a> 
+<a name="l18"><span class="ln">18   </span></a></span><span class="s0">public class </span><span class="s1">PersonalDataSource { 
+<a name="l19"><span class="ln">19   </span></a>     
+<a name="l20"><span class="ln">20   </span></a>    </span><span class="s0">public static final </span><span class="s1">String LOGTAG = </span><span class="s2">&quot;PERSONAL&quot;</span><span class="s1">; 
+<a name="l21"><span class="ln">21   </span></a>     
+<a name="l22"><span class="ln">22   </span></a>    </span><span class="s3">/** 
+<a name="l23"><span class="ln">23   </span></a>     * Next, I'll declare the instances of the Database Open Helper and the Database. 
+<a name="l24"><span class="ln">24   </span></a>     */</span><span class="s1"> 
+<a name="l25"><span class="ln">25   </span></a> 
+<a name="l26"><span class="ln">26   </span></a>    SQLiteOpenHelper dbhelper; 
+<a name="l27"><span class="ln">27   </span></a>    SQLiteDatabase  database;    
+<a name="l28"><span class="ln">28   </span></a>     
+<a name="l29"><span class="ln">29   </span></a>    </span><span class="s3">/** 
+<a name="l30"><span class="ln">30   </span></a>     * to retrive the data from the db we'll need a string array: 
+<a name="l31"><span class="ln">31   </span></a>     */</span><span class="s1"> 
+<a name="l32"><span class="ln">32   </span></a>     
+<a name="l33"><span class="ln">33   </span></a>    </span><span class="s0">private static final </span><span class="s1">String [] allColumns = { 
+<a name="l34"><span class="ln">34   </span></a>         
+<a name="l35"><span class="ln">35   </span></a>        PersonalDBOpenHelper.COLUMN_ID, 
+<a name="l36"><span class="ln">36   </span></a>        PersonalDBOpenHelper.COLUMN_NAME, 
+<a name="l37"><span class="ln">37   </span></a>        PersonalDBOpenHelper.COLUMN_LASTNAME , 
+<a name="l38"><span class="ln">38   </span></a>        PersonalDBOpenHelper.COLUMN_AGE, 
+<a name="l39"><span class="ln">39   </span></a>        PersonalDBOpenHelper.COLUMN_IMAGE, 
+<a name="l40"><span class="ln">40   </span></a>        PersonalDBOpenHelper.COLUMN_PHOTO 
+<a name="l41"><span class="ln">41   </span></a>    }; 
+<a name="l42"><span class="ln">42   </span></a> 
+<a name="l43"><span class="ln">43   </span></a>    </span><span class="s3">/** 
+<a name="l44"><span class="ln">44   </span></a>     * I'll instantiate the Database Open Helper class when the data source is instantiated.  
+<a name="l45"><span class="ln">45   </span></a>     * So I'll add code to the PersonalDataSource constructor method.  
+<a name="l46"><span class="ln">46   </span></a>     */</span><span class="s1"> 
+<a name="l47"><span class="ln">47   </span></a>     
+<a name="l48"><span class="ln">48   </span></a>    </span><span class="s0">public </span><span class="s1">PersonalDataSource (Context context) { 
+<a name="l49"><span class="ln">49   </span></a>        dbhelper = </span><span class="s0">new </span><span class="s1">PersonalDBOpenHelper(context); 
+<a name="l50"><span class="ln">50   </span></a>         
+<a name="l51"><span class="ln">51   </span></a>    } 
+<a name="l52"><span class="ln">52   </span></a>     
+<a name="l53"><span class="ln">53   </span></a>    </span><span class="s3">/** 
+<a name="l54"><span class="ln">54   </span></a>     * Create and/or open a database that will be used for reading and writing.  
+<a name="l55"><span class="ln">55   </span></a>     * The first time this is called, the database will be opened and onCreate,  
+<a name="l56"><span class="ln">56   </span></a>     * onUpgrade and/or onOpen will be called. Once opened successfully, the database  
+<a name="l57"><span class="ln">57   </span></a>     * is cached, so you can call this method every time you need to write to the database.  
+<a name="l58"><span class="ln">58   </span></a>     * </span><span class="s4">@return</span><span class="s3">  
+<a name="l59"><span class="ln">59   </span></a>     */</span><span class="s1"> 
+<a name="l60"><span class="ln">60   </span></a>     
+<a name="l61"><span class="ln">61   </span></a>    </span><span class="s0">public </span><span class="s1">PersonalDataSource open() </span><span class="s0">throws </span><span class="s1">SQLException { 
+<a name="l62"><span class="ln">62   </span></a>        Log.i(LOGTAG, </span><span class="s2">&quot;Database opened&quot;</span><span class="s1">); 
+<a name="l63"><span class="ln">63   </span></a>        database = dbhelper.getWritableDatabase(); 
+<a name="l64"><span class="ln">64   </span></a>        </span><span class="s0">return this</span><span class="s1">; 
+<a name="l65"><span class="ln">65   </span></a>    } 
+<a name="l66"><span class="ln">66   </span></a>     
+<a name="l67"><span class="ln">67   </span></a>    </span><span class="s3">/** 
+<a name="l68"><span class="ln">68   </span></a>     * Make sure to call close when you no longer need the database. 
+<a name="l69"><span class="ln">69   </span></a>     */</span><span class="s1"> 
+<a name="l70"><span class="ln">70   </span></a>     
+<a name="l71"><span class="ln">71   </span></a>    </span><span class="s0">public void </span><span class="s1">close() </span><span class="s0">throws </span><span class="s1">SQLException { 
+<a name="l72"><span class="ln">72   </span></a>        Log.i(LOGTAG, </span><span class="s2">&quot;Database closed&quot;</span><span class="s1">); 
+<a name="l73"><span class="ln">73   </span></a>        dbhelper.close(); 
+<a name="l74"><span class="ln">74   </span></a>         
+<a name="l75"><span class="ln">75   </span></a>    } 
+<a name="l76"><span class="ln">76   </span></a> 
+<a name="l77"><span class="ln">77   </span></a>    </span><span class="s3">/** 
+<a name="l78"><span class="ln">78   </span></a>     * Inserting data into the db, for this you must first implement your model, which we'll call &quot;Personal&quot;... 
+<a name="l79"><span class="ln">79   </span></a>     */</span><span class="s1"> 
+<a name="l80"><span class="ln">80   </span></a>     
+<a name="l81"><span class="ln">81   </span></a>    </span><span class="s0">public </span><span class="s1">Personal create (Personal personal) </span><span class="s3">//returns and instance of the Personal class!</span><span class="s1"> 
+<a name="l82"><span class="ln">82   </span></a>    { 
+<a name="l83"><span class="ln">83   </span></a>        ContentValues values = </span><span class="s0">new </span><span class="s1">ContentValues(); </span><span class="s3">//instantiated with the class construction method</span><span class="s1"> 
+<a name="l84"><span class="ln">84   </span></a>        </span><span class="s3">//the ContentValues class implements the MAP interface!</span><span class="s1"> 
+<a name="l85"><span class="ln">85   </span></a>        </span><span class="s3">//values.put(key, value);</span><span class="s1"> 
+<a name="l86"><span class="ln">86   </span></a>        values.put(PersonalDBOpenHelper.COLUMN_NAME, personal.getTitle()); 
+<a name="l87"><span class="ln">87   </span></a>        values.put(PersonalDBOpenHelper.COLUMN_LASTNAME, personal.getLastName()); 
+<a name="l88"><span class="ln">88   </span></a>        values.put(PersonalDBOpenHelper.COLUMN_AGE, personal.getAge()); 
+<a name="l89"><span class="ln">89   </span></a>        values.put(PersonalDBOpenHelper.COLUMN_IMAGE, personal.getImage());      
+<a name="l90"><span class="ln">90   </span></a>        values.put(PersonalDBOpenHelper.COLUMN_PHOTO, Utility.getBytes(personal.getBmp())); 
+<a name="l91"><span class="ln">91   </span></a>         
+<a name="l92"><span class="ln">92   </span></a>        </span><span class="s3">//now lets insert the row into the database:</span><span class="s1"> 
+<a name="l93"><span class="ln">93   </span></a>        </span><span class="s0">long </span><span class="s1">insertid = database.insert(PersonalDBOpenHelper.TABLE_PERSONAL, </span><span class="s0">null</span><span class="s1">, values); 
+<a name="l94"><span class="ln">94   </span></a>        </span><span class="s3">//when the row is created I receive back the COLUMN_ID &quot; INTEGER PRIMARY KEY AUTOINCREMENT, &quot; value!! </span><span class="s1"> 
+<a name="l95"><span class="ln">95   </span></a>        </span><span class="s3">//so now, I will assign it back to the personal object</span><span class="s1"> 
+<a name="l96"><span class="ln">96   </span></a>        personal.setId(insertid); 
+<a name="l97"><span class="ln">97   </span></a>         
+<a name="l98"><span class="ln">98   </span></a>        </span><span class="s0">return </span><span class="s1">personal; 
+<a name="l99"><span class="ln">99   </span></a>         
+<a name="l100"><span class="ln">100  </span></a>        </span><span class="s3">//now you must set the data, so back to the MainActivity!</span><span class="s1"> 
+<a name="l101"><span class="ln">101  </span></a>         
+<a name="l102"><span class="ln">102  </span></a>    } 
+<a name="l103"><span class="ln">103  </span></a>     
+<a name="l104"><span class="ln">104  </span></a>    </span><span class="s3">//I'll create a list of personal objects to retrive all of my columns and rows from the db:</span><span class="s1"> 
+<a name="l105"><span class="ln">105  </span></a>     
+<a name="l106"><span class="ln">106  </span></a>    </span><span class="s0">public </span><span class="s1">List&lt;Personal&gt; findAll() { 
+<a name="l107"><span class="ln">107  </span></a> 
+<a name="l108"><span class="ln">108  </span></a>            List&lt;Personal&gt; personals = </span><span class="s0">new </span><span class="s1">ArrayList&lt;Personal&gt;(); 
+<a name="l109"><span class="ln">109  </span></a>         
+<a name="l110"><span class="ln">110  </span></a>        </span><span class="s3">//next we'll query the db:</span><span class="s1"> 
+<a name="l111"><span class="ln">111  </span></a>        Cursor cursor = database.query(PersonalDBOpenHelper.TABLE_PERSONAL, allColumns,  
+<a name="l112"><span class="ln">112  </span></a>                </span><span class="s0">null</span><span class="s1">, </span><span class="s0">null</span><span class="s1">, </span><span class="s0">null</span><span class="s1">, </span><span class="s0">null</span><span class="s1">, </span><span class="s0">null</span><span class="s1">); 
+<a name="l113"><span class="ln">113  </span></a>         
+<a name="l114"><span class="ln">114  </span></a>        Log.i(LOGTAG, </span><span class="s2">&quot;return&quot; </span><span class="s1">+ cursor.getCount() + </span><span class="s2">&quot; rows&quot;</span><span class="s1">); 
+<a name="l115"><span class="ln">115  </span></a>         
+<a name="l116"><span class="ln">116  </span></a>        </span><span class="s3">//this methods needs to return a list of personal objects, so we need to loop through the cursor...one row at a time!!</span><span class="s1"> 
+<a name="l117"><span class="ln">117  </span></a>        </span><span class="s3">//remember that in a result the cursor stars before the first row...so we'll have to make sure it is greater than 0!</span><span class="s1"> 
+<a name="l118"><span class="ln">118  </span></a>        </span><span class="s0">if </span><span class="s1">(cursor.getCount() &gt; </span><span class="s5">0</span><span class="s1">) { 
+<a name="l119"><span class="ln">119  </span></a>            </span><span class="s0">while </span><span class="s1">(cursor.moveToNext()) {   </span><span class="s3">//now retrive one row at a time!</span><span class="s1"> 
+<a name="l120"><span class="ln">120  </span></a>                Personal personal = </span><span class="s0">new </span><span class="s1">Personal(); </span><span class="s3">//instantiating Personal class!</span><span class="s1"> 
+<a name="l121"><span class="ln">121  </span></a>                personal.setId(cursor.getLong(cursor.getColumnIndex(PersonalDBOpenHelper.COLUMN_ID))); 
+<a name="l122"><span class="ln">122  </span></a>                personal.setTitle(cursor.getString(cursor.getColumnIndex(PersonalDBOpenHelper.COLUMN_NAME))); 
+<a name="l123"><span class="ln">123  </span></a>                personal.setLastName(cursor.getString(cursor.getColumnIndex(PersonalDBOpenHelper.COLUMN_LASTNAME))); 
+<a name="l124"><span class="ln">124  </span></a>                personal.setImage(cursor.getString(cursor.getColumnIndex(PersonalDBOpenHelper.COLUMN_IMAGE))); 
+<a name="l125"><span class="ln">125  </span></a>                personal.setAge(cursor.getInt(cursor.getColumnIndex(PersonalDBOpenHelper.COLUMN_AGE))); 
+<a name="l126"><span class="ln">126  </span></a> 
+<a name="l127"><span class="ln">127  </span></a>                </span><span class="s3">// this lines are used for the IMAGE!</span><span class="s1"> 
+<a name="l128"><span class="ln">128  </span></a>                </span><span class="s0">byte</span><span class="s1">[] blob = cursor.getBlob(cursor.getColumnIndex(PersonalDBOpenHelper.COLUMN_PHOTO)); 
+<a name="l129"><span class="ln">129  </span></a>                personal.setBmp(Utility.getPhoto(blob)); 
+<a name="l130"><span class="ln">130  </span></a>                 
+<a name="l131"><span class="ln">131  </span></a>                personals.add(personal); </span><span class="s3">//added to my list!    </span><span class="s1"> 
+<a name="l132"><span class="ln">132  </span></a>                 
+<a name="l133"><span class="ln">133  </span></a>            } 
+<a name="l134"><span class="ln">134  </span></a>        } 
+<a name="l135"><span class="ln">135  </span></a>         
+<a name="l136"><span class="ln">136  </span></a>        </span><span class="s0">return </span><span class="s1">personals;   </span><span class="s3">//now you need to get this list from the main activity!</span><span class="s1"> 
+<a name="l137"><span class="ln">137  </span></a>                 
+<a name="l138"><span class="ln">138  </span></a>    } 
+<a name="l139"><span class="ln">139  </span></a>     
+<a name="l140"><span class="ln">140  </span></a> 
+<a name="l141"><span class="ln">141  </span></a>} 
+<a name="l142"><span class="ln">142  </span></a></span></pre>
+</body>
+</html>
